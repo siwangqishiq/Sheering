@@ -15,7 +15,7 @@ public class MoveControl extends MovingObject  implements InputProcessor
     private Sprite mSprite;
     private PhysicsDemo2 mContext;
     
-    private float maxControllForce = 100;
+    private float maxControllForce = 1000;
     private Vector2 force = new Vector2(0,0);
     private Vector2 upForce = new Vector2(0,maxControllForce);
     private Vector2 downForce = new Vector2(0,-maxControllForce);
@@ -26,7 +26,8 @@ public class MoveControl extends MovingObject  implements InputProcessor
     private boolean isDownPressed = false;
     private boolean isLeftPressed =false;
     private boolean isRightPressed = false;
-
+    private boolean isSpacePressed = false;
+    
     public MoveControl(PhysicsDemo2 mContext)
     {
         this.mContext = mContext;
@@ -111,6 +112,17 @@ public class MoveControl extends MovingObject  implements InputProcessor
 //            retForce.add(temp);
             retForce.add(rightForce);
         }
+        
+        if(isSpacePressed)//É²³µ
+        {
+            if(velocity.len()>5f){
+                Vector2 focus = velocity.cpy().nor().scl(-300);
+                retForce.add(focus);
+            }else{
+                Vector2 focus = velocity.cpy().nor().scl(-1);
+                retForce.add(focus);
+            }
+        }
         return retForce;
     }
 
@@ -134,6 +146,10 @@ public class MoveControl extends MovingObject  implements InputProcessor
         {
             isRightPressed = true;
         }
+        if(Input.Keys.SPACE == keycode)
+        {
+            isSpacePressed = true;
+        }
         return false;
     }
 
@@ -155,6 +171,10 @@ public class MoveControl extends MovingObject  implements InputProcessor
         if(Input.Keys.RIGHT == keycode)
         {
             isRightPressed = false;
+        }
+        if(Input.Keys.SPACE == keycode)
+        {
+            isSpacePressed = false;
         }
         return false;
     }
