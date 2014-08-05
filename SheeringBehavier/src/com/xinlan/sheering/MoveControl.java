@@ -115,12 +115,12 @@ public class MoveControl extends MovingObject  implements InputProcessor
         
         if(isSpacePressed)//É²³µ
         {
-            if(velocity.len()>5f){
+            if(velocity.len()>10f){
                 Vector2 focus = velocity.cpy().nor().scl(-300);
                 retForce.add(focus);
             }else{
-                Vector2 focus = velocity.cpy().nor().scl(-1);
-                retForce.add(focus);
+                retForce.set(0,0);
+                this.velocity.set(0,0);
             }
         }
         return retForce;
