@@ -9,7 +9,7 @@ public class MovingObject extends GameObjectBase {
 	protected Vector2 targetTo = new Vector2();//目标到达位置
 	
 	protected float headAngle=0;//朝向角度
-	protected float maxSpeed=2200;// 最大速度
+	protected float maxSpeed=200;// 最大速度
 	protected float maxTurnSpeed;// 最大转弯速度
 	protected float mass;//质量
 	
