@@ -20,7 +20,8 @@ public class Demo {
 		config.height = 600;
 		config.title="物体运动";
 		//new LwjglApplication(new MyApp(),config);
-		new LwjglApplication(new PhysicsDemo(),config);
+		//new LwjglApplication(new PhysicsDemo(),config);
+		new LwjglApplication(new PhysicsDemo2(),config);
 	}
 
 }//end class
