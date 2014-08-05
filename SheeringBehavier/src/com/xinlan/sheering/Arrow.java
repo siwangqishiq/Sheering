@@ -14,9 +14,7 @@ public class Arrow extends MovingObject implements InputProcessor
     private Texture crossTexture;
     private float cross_width, cross_height;
     private Sprite mSprite;
-    private SteeringBehavior steering;
     private Vector3 touchPos = new Vector3();
-    private Vector2 target_to = new Vector2();
     private MyApp mContext;
 
     public Arrow(MyApp mContext)
@@ -28,33 +26,32 @@ public class Arrow extends MovingObject implements InputProcessor
         cross_height = crossTexture.getHeight() / 2;
 
         mSprite = new Sprite(texture);
-        steering = new SteeringBehavior();
-
         // this.velocity.set(20,20);
     }
 
     public void update(float delta)
     {
-       // Vector2 force = steering.calcluateForce();
-        Vector2 force = steering.seek(target_to);//抵达 运动模式
-        
+        // Vector2 force = steering.calcluateForce();
+         //Vector2 force = steering.seek(targetTo);//抵达 运动模式
+        //Vector2 force = steering.seek(targetTo);
+        //Vector2 force = steering.flee(targetTo);
+        Vector2 force = steering.arrive(targetTo, SteeringBehavior.ArriveMode.Normal);//抵达 运动模式
         
         force.scl(1 / this.mass);
         force.scl(delta);
         this.velocity.add(force);
-        // System.out.println(this.velocity.x +"      "+this.velocity.y );
         this.velocity.limit(this.maxSpeed);
-        // System.out.println(this.velocity.x +"      "+this.velocity.y );
         this.pos.add(this.velocity.cpy().scl(delta));
 
-        if (this.velocity.len() > 0.00000001f)
+        if (this.velocity.len() > 0.5f)
         {
             heading = this.velocity.cpy().nor();
             siding = this.heading;
+        }else{
+            this.velocity.set(0,0);
         }
-
         this.wapWorld();
-        // System.out.println(pos.x+"     "+pos.y);
+        
         mSprite.setPosition(pos.x, pos.y);
     }
 
@@ -64,11 +61,10 @@ public class Arrow extends MovingObject implements InputProcessor
         float cur = this.heading.angle();
         mSprite.rotate(-this.headAngle);
         this.headAngle = cur;
+        
         mSprite.rotate(headAngle);
-
         mSprite.draw(batch);
-
-        batch.draw(crossTexture, target_to.x - cross_width, target_to.y
+        batch.draw(crossTexture, targetTo.x - cross_width, targetTo.y
                 - cross_height);
     }
 
@@ -78,28 +74,10 @@ public class Arrow extends MovingObject implements InputProcessor
         // System.out.println(screenX+"   "+screenY);
         touchPos.set(screenX, screenY, 0);
         mContext.camera.unproject(touchPos);
-        target_to.set(touchPos.x, touchPos.y);
+        targetTo.set(touchPos.x, touchPos.y);
         // System.out.println("--->"+target_to.x+"   "+target_to.y);
         return true;
     }
-
-    private  final class SteeringBehavior
-    {
-        private Vector2 force = new Vector2();
-
-        public Vector2 calcluateForce()
-        {
-            force.set(0, 0);
-            return force;
-        }
-
-        public Vector2 seek(Vector2 target)
-        {
-            Vector2 temp = target.cpy();
-            Vector2 desiredVelocity = temp.sub(pos).nor().scl(maxSpeed);
-            return desiredVelocity.sub(velocity);
-        }
-    }//end inner class
 
     @Override
     public boolean keyDown(int keycode)

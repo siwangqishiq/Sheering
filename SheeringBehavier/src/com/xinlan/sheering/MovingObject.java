@@ -6,13 +6,18 @@ public class MovingObject extends GameObjectBase {
 	protected Vector2 velocity = new Vector2();// 速度向量
 	protected Vector2 heading = new Vector2();// 朝向向量
 	protected Vector2 siding = new Vector2();// 垂直向量
+	protected Vector2 targetTo = new Vector2();//目标到达位置
+	
 	protected float headAngle=0;//朝向角度
-	protected float maxSpeed=400;// 最大速度
+	protected float maxSpeed=2200;// 最大速度
 	protected float maxTurnSpeed;// 最大转弯速度
 	protected float mass;//质量
 	
+	protected SteeringBehavior steering;
+	
 	public MovingObject() {
 		mass = 1f;
+		steering = new SteeringBehavior(this);
 	}
 
 	protected void wapWorld() {
