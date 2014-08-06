@@ -32,11 +32,12 @@ public class Arrow extends MovingObject implements InputProcessor
     public void update(float delta)
     {
         // Vector2 force = steering.calcluateForce();
-         //Vector2 force = steering.seek(targetTo);//抵达 运动模式
-        //Vector2 force = steering.seek(targetTo);
-        //Vector2 force = steering.flee(targetTo);
-        Vector2 force = steering.arrive(targetTo, SteeringBehavior.ArriveMode.Normal);//抵达 运动模式
-        
+        // Vector2 force = steering.seek(targetTo);//抵达 运动模式
+        // Vector2 force = steering.seek(targetTo);
+        // Vector2 force = steering.flee(targetTo);
+        Vector2 force = steering.arrive(targetTo,
+                SteeringBehavior.ArriveMode.Normal);// 抵达 运动模式
+
         force.scl(1 / this.mass);
         force.scl(delta);
         this.velocity.add(force);
@@ -46,12 +47,14 @@ public class Arrow extends MovingObject implements InputProcessor
         if (this.velocity.len() > 0.5f)
         {
             heading = this.velocity.cpy().nor();
-            siding = this.heading;
-        }else{
-            this.velocity.set(0,0);
+            siding = this.heading.cpy().rotate90(-1).nor();
+        }
+        else
+        {
+            this.velocity.set(0, 0);
         }
         this.wapWorld();
-        
+
         mSprite.setPosition(pos.x, pos.y);
     }
 
@@ -61,7 +64,7 @@ public class Arrow extends MovingObject implements InputProcessor
         float cur = this.heading.angle();
         mSprite.rotate(-this.headAngle);
         this.headAngle = cur;
-        
+
         mSprite.rotate(headAngle);
         mSprite.draw(batch);
         batch.draw(crossTexture, targetTo.x - cross_width, targetTo.y
