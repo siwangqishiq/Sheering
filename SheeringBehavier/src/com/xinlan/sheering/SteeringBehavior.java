@@ -1,5 +1,6 @@
 package com.xinlan.sheering;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 public class SteeringBehavior
@@ -69,12 +70,37 @@ public class SteeringBehavior
         if (distance > 0f)
         {
             float factor = 0.8f;
-            float speed = Math.min(distance/(factor*mode.value), vehicle.maxSpeed);
-            Vector2 desiredVelocity = toTarget.scl(speed/distance);
+            float speed = Math.min(distance / (factor * mode.value),
+                    vehicle.maxSpeed);
+            Vector2 desiredVelocity = toTarget.scl(speed / distance);
             return desiredVelocity.sub(vehicle.velocity);
         }// end if
 
         return new Vector2(0, 0);
+    }
+
+    /**
+     * 漫步 搜索模式
+     * 
+     * @return
+     */
+    public Vector2 wander()
+    {
+        float wanderJitter = 10f;// 随机扰动最大值
+        float wanderRadius = 10f;// wander圈半径
+        float wanderDistance = 5f;// wander圈突出距离
+        Vector2 target = vehicle.pos.cpy();
+        target.rotate(this.vehicle.heading.angle());
+        System.out.println("pos--->"+vehicle.pos.x+"     "+vehicle.pos.y);
+        System.out.println("--->"+target.x+"     "+target.y);
+        Vector2 wanderTarget = target.add(MathUtils.random(-1, 1)
+                * wanderJitter, MathUtils.random(-1, 1) * wanderJitter);
+        System.out.println(wanderTarget.x+"     "+wanderTarget.y);
+        wanderTarget.nor();
+        wanderTarget.scl(wanderRadius);
+        wanderTarget.add(wanderDistance, 0);
+
+        return wanderTarget.sub(vehicle.pos);
     }
 
 }// end class
